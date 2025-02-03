@@ -9,6 +9,9 @@ import UIKit
 import SnapKit
 
 final class CharacterViewController: UIViewController {
+    var presenter: CharacterPresenterProtocol?
+    var nerworkManager: NetworkManagerProtocol?
+
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.separatorStyle = .none
@@ -21,7 +24,7 @@ final class CharacterViewController: UIViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupViews()
-        getCharacters()
+        presenter?.viewDidLoad()
     }
 
     private func setupNavigationBar() {
@@ -43,29 +46,24 @@ final class CharacterViewController: UIViewController {
             make.edges.equalToSuperview()
         }
     }
+}
 
-    private func getCharacters() {
-        if let savedCharacters = StorageManager.shared.loadCharacters() {
-            characters = savedCharacters
-            tableView.reloadData()
-            return
-        }
+// MARK: - CharacterViewProtocol
+extension CharacterViewController: CharacterViewProtocol {
+    func displayCharacters(_ characters: [Character]) {
+        self.characters = characters
+        tableView.reloadData()
+    }
 
-        NetworkManager.shared.getCharacters { [weak self] result in
-            switch result {
-            case .success(let character):
-                DispatchQueue.main.async {
-                    self?.characters = character
-                    self?.tableView.reloadData()
-                    StorageManager.shared.saveCharacters(character)
-                }
-            case .failure(let error):
-                print("Failed to fetch drinks: \(error.localizedDescription)")
-            }
-        }
+    func displayError(_ message: String) {
+        // Простое отображение ошибки с использованием UIAlertController
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 
+// MARK: - UITableViewDataSource
 extension CharacterViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return characters.count
@@ -81,7 +79,7 @@ extension CharacterViewController: UITableViewDataSource {
         let character = characters[indexPath.row]
         let imageURL = character.image
 
-        NetworkManager.shared.loadImage(from: imageURL) { loadedImage in
+        nerworkManager?.loadImage(from: imageURL) { loadedImage in
             DispatchQueue.main.async {
                 guard let cell = tableView.cellForRow(at: indexPath) as? CharacterTableViewCell  else {
                     return
@@ -94,6 +92,7 @@ extension CharacterViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension CharacterViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         128
