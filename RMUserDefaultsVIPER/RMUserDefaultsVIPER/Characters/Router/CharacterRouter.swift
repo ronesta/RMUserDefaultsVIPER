@@ -12,22 +12,26 @@ final class CharacterRouter: CharacterRouterProtocol {
     weak var viewController: UIViewController?
 
     static func createModule() -> UIViewController {
-        let view = CharacterViewController()
-        let presenter = CharacterPresenter()
-        let interactor = CharacterInteractor()
-        let router = CharacterRouter()
         let storageManager = StorageManager()
         let networkManager = NetworkManager(storageManager: storageManager)
 
+        let view = CharacterViewController()
+        let dataSource = CharacterTableViewDataSource(networkManager: networkManager)
+        let presenter = CharacterPresenter()
+        let interactor = CharacterInteractor()
+        let router = CharacterRouter()
+
         view.presenter = presenter
-        view.nerworkManager = networkManager
+        view.dataSource = dataSource
+
         presenter.view = view
         presenter.interactor = interactor
         presenter.router = router
-        interactor.presenter = presenter
 
+        interactor.presenter = presenter
         interactor.storageManager = storageManager
         interactor.networkManager = networkManager
+
         router.viewController = view
 
         return view
