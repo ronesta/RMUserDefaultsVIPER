@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 
 final class CharacterTableViewDataSource: NSObject, CharacterDataSourceProtocol {
-    var networkManager: NetworkManagerProtocol?
+    private let networkManager: NetworkManagerProtocol
     var characters = [Character]()
 
-    init(networkManager: NetworkManagerProtocol?) {
+    init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
     }
 
@@ -30,7 +30,7 @@ final class CharacterTableViewDataSource: NSObject, CharacterDataSourceProtocol 
         let character = characters[indexPath.row]
         let imageURL = character.image
 
-        networkManager?.loadImage(from: imageURL) { loadedImage in
+        networkManager.loadImage(from: imageURL) { loadedImage in
             DispatchQueue.main.async {
                 guard let cell = tableView.cellForRow(at: indexPath) as? CharacterTableViewCell  else {
                     return

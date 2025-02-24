@@ -9,5 +9,5 @@ import Foundation
 import UIKit
 
 protocol CharacterRouterProtocol: AnyObject {
-    static func createModule() -> UIViewController
+    func createModule() -> UIViewController
 }
