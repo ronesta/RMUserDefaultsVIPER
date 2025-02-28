@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UIKit
+import UIKit.UIViewController
 
 final class CharacterRouter: CharacterRouterProtocol {
     weak var viewController: UIViewController?
@@ -15,8 +15,8 @@ final class CharacterRouter: CharacterRouterProtocol {
         let storageManager = StorageManager()
         let networkManager = NetworkManager(storageManager: storageManager)
 
-        let dataSource = CharacterTableViewDataSource(networkManager: networkManager)
         let presenter = CharacterPresenter()
+        let dataSource = CharacterTableViewDataSource(presenter: presenter)
         let router = CharacterRouter()
 
         let interactor = CharacterInteractor(presenter: presenter,

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UIKit
+import UIKit.UIViewController
 
 protocol CharacterRouterProtocol: AnyObject {
     func createModule() -> UIViewController

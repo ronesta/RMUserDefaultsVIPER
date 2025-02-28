@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import UIKit
+import UIKit.UIImage
 
 final class NetworkManager: NetworkManagerProtocol {
     private var dataCounter = 1
     private var imageCounter = 1
 
-    var storageManager: StorageManagerProtocol
+    private let storageManager: StorageManagerProtocol
     private let urlString = "https://rickandmortyapi.com/api/character"
 
     init(storageManager: StorageManagerProtocol) {

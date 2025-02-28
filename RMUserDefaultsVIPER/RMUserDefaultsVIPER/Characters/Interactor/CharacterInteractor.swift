@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit.UIImage
 
 final class CharacterInteractor: CharacterInteractorProtocol {
     private let presenter: CharacterPresenterProtocol
@@ -36,5 +37,9 @@ final class CharacterInteractor: CharacterInteractorProtocol {
                 self?.presenter.charactersFetchFailed(with: error)
             }
         }
+    }
+
+    func loadImage(for character: Character, completion: @escaping (UIImage?) -> Void) {
+        networkManager.loadImage(from: character.image, completion: completion)
     }
 }

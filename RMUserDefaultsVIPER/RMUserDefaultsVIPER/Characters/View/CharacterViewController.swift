@@ -23,7 +23,6 @@ final class CharacterViewController: UIViewController {
     ) {
         self.presenter = presenter
         self.dataSource = dataSource
-
         super.init(nibName: nil, bundle: nil)
     }
 
